@@ -9,12 +9,24 @@ class Database:
         self.db_url = db_url
         #self.db_conn = sqlite3.connect(db_url)
         self.create_connection()
-        
+        self.create_table()
+
     def create_connection(self):
         try:
             self.db_conn = sqlite3.connect(self.db_url)
+            print('Realizada conexion con exito')
         except Exception as e:
             print(f'Imposible conectar con la base de datos: {e}')
+            
+
+    def create_table(self):
+        cursor = self.db_conn.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS sensor_data (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            value TEXT,
+                            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                          )''')
+        self.db_conn.commit()
     
 # Creacion del Sensor
 class Sensor:
@@ -48,7 +60,7 @@ class DataPublisher:
 def main():
     parser = argparse.ArgumentParser(description="Sensor Application")
     parser.add_argument("--frequency", type=int, default=5, help="Frecuencia de lectura del sensor en segundos.")
-    parser.add_argument("--db_uri", default="sqlite:///sensor_data.db", help="URL de conexion a la base de datos.")
+    parser.add_argument("--db_uri", default="../sensor_data.db", help="URL de conexion a la base de datos.")
 
     args = parser.parse_args()
 
