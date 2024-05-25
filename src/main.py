@@ -28,6 +28,14 @@ class Database:
                             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
                           )''')
         self.db_conn.commit()
+
+    def store_data(self, data):
+        try:
+            cursor = self.db_conn.cursor()
+            cursor.execute("INSERT INTO sensor_data (value) VALUES (?)", (data,))
+            self.db_conn.commit()
+        except sqlite3.Error as e:
+            print(f'Error subiendo datos al DB {e}')
     
 # Creacion del Sensor
 class Sensor:
@@ -49,7 +57,9 @@ class DataPublisher:
 
     async def connect_to_nats(self):
         try:
-            await self.nats_client.connect('nats://localhost:4222')
+            await self.nats_client.connect(servers=["nats://localhost:4222"], io_loop=asyncio.get_running_loop(), connect_timeout=10)
+
+            #await self.nats_client.connect('nats://localhost:4222')
         except Exception as e:
             print(f'Imposible conectarse al servidor NATS {e}')
     
@@ -79,7 +89,9 @@ async def main():
 
     while True:
         data = sensor.read_sensor_data()
-        await data_publisher.publish_data(data)
+        if data:
+            await data_publisher.publish_data(data)
+            database.store_data(data)
         #time.sleep(args.frequency) #Paralizar la solicitud de datos el tiempo marcado como frecuencia
         await asyncio.sleep(args.frequency)
 

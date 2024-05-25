@@ -1,5 +1,0 @@
-1.- Creacion entorno anaconda
-2.- Instalacion librerias
-	nats
-	sqlite
-	

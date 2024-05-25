@@ -1,0 +1,14 @@
+1.- Creacion entorno anaconda
+
+2.- Instalacion librerias
+	nats
+	sqlite
+
+3.- Instalar choco 
+
+	PS Windows: 'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))'
+
+
+4.- Instalar NATS-SERVER
+
+	PS Windows: 'choco install nats-server'
