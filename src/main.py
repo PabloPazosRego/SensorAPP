@@ -1,6 +1,7 @@
 import sqlite3  # Para SQLite
 from nats.aio.client import Client as NATS
 import random, argparse, time
+import asyncio
 
 # Creacion Base de Datos
 
@@ -44,20 +45,26 @@ class DataPublisher:
     '''
     def __init__(self) -> None:
         self.nats_client = NATS()
-        self.connect_to_nats()
+        #self.connect_to_nats()
 
-    def connect_to_nats(self):
-        self.nats_client.connect('nats://localhost:4222')
+    async def connect_to_nats(self):
+        try:
+            await self.nats_client.connect('nats://localhost:4222')
+        except Exception as e:
+            print(f'Imposible conectarse al servidor NATS {e}')
     
-    def publish_data(self, data):
-        self.nats_client.publish('sensor.data', str(data).encode())
+    async def publish_data(self, data):
+        try:
+            await self.nats_client.publish('sensor.data', str(data).encode())
+        except Exception as e:
+            print(f'Imposible publidar datos en el servidor NATS {e}')
 
 
 '''
     Inicializacion del programa
     Se añaden los argumentos solicitados para introducir cada vez que se ejecute la APP se puedan modificar en la llamada.
 '''
-def main():
+async def main():
     parser = argparse.ArgumentParser(description="Sensor Application")
     parser.add_argument("--frequency", type=int, default=5, help="Frecuencia de lectura del sensor en segundos.")
     parser.add_argument("--db_uri", default="../sensor_data.db", help="URL de conexion a la base de datos.")
@@ -68,10 +75,13 @@ def main():
     data_publisher = DataPublisher()
     database = Database(args.db_uri)
 
+    await data_publisher.connect_to_nats()
+
     while True:
         data = sensor.read_sensor_data()
-        data_publisher.publish_data(data)
-        time.sleep(args.frequency) #Paralizar la solicitud de datos el tiempo marcado como frecuencia
+        await data_publisher.publish_data(data)
+        #time.sleep(args.frequency) #Paralizar la solicitud de datos el tiempo marcado como frecuencia
+        await asyncio.sleep(args.frequency)
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
