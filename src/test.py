@@ -30,8 +30,10 @@ class TestDataPublisher(unittest.TestCase):
         self.data_publisher.nats_client.publish = AsyncMock()
 
     def test_publish_data(self):
-        loop = asyncio.get_event_loop()
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
         loop.run_until_complete(self._test_publish_data())
+        loop.close()
 
     async def _test_publish_data(self):
         data = [random.randint(0, 100) for _ in range(64)]

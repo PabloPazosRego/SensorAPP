@@ -1,3 +1,5 @@
 sensor_data.db
 src/__pycache__/SensorAPP.cpython-312.pyc
 src/__pycache__/test.cpython-312.pyc
+build/**
+source/** 

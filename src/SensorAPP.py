@@ -4,6 +4,7 @@ import random, argparse, time
 import asyncio, serial
 import logging
 
+
 class Database:
     ''' 
         Gestion de la base de datos: creación y subida de datos
@@ -47,6 +48,14 @@ class Sensor:
         Se gestiona si la cogida de datos es artificial o de un sensor real.
     '''
     def __init__(self, sensor_type, serial_port =None, baud_rate = None):
+        """Constructor del sensor.
+
+        Args:
+            sensor_type (str): Tipo de sensor ("mockup" o "real").
+            serial_port (str, optional): Puerto serial del sensor. Defaults to None.
+            baud_rate (int, optional): Velocidad de baudios. Defaults to None.
+        """
+
         self.sensor_type = sensor_type
         self.serial_port = serial_port
         self.baud_rate = baud_rate
