@@ -1,7 +1,7 @@
 import sqlite3  # Para SQLite
 from nats.aio.client import Client as NATS
 import random, argparse, time
-import asyncio
+import asyncio, serial
 
 # Creacion Base de Datos
 
@@ -40,8 +40,20 @@ class Database:
     
 # Creacion del Sensor
 class Sensor:
-    def __init__(self):
+    def __init__(self, sensor_type, serial_port =None, baud_rate = None):
+        self.sensor_type = sensor_type
+        self.serial_port = serial_port
+        self.baud_rate = baud_rate
+        if sensor_type == 'mockup':
+            self.connect_sensor()
         return
+    
+    def connect_sensor(self):
+        try:
+            self.serial_conn = serial.Serial(self.serial_port, self.baud_rate)
+        except Exception as e:
+            print(f'Error en la conexion al sensor: {e}')
+    
     def read_sensor_data(self):
         ''' Leer datos del sensor, 
         inicialmente generamos datos aleatorios en el formato del sensor real'''
