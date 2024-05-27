@@ -44,7 +44,7 @@ class Sensor:
         self.sensor_type = sensor_type
         self.serial_port = serial_port
         self.baud_rate = baud_rate
-        if sensor_type == 'mockup':
+        if sensor_type == 'real':
             self.connect_sensor()
         return
     
@@ -55,10 +55,15 @@ class Sensor:
             print(f'Error en la conexion al sensor: {e}')
     
     def read_sensor_data(self):
-        ''' Leer datos del sensor, 
-        inicialmente generamos datos aleatorios en el formato del sensor real'''
-        return [random.randint(0, 100) for _ in range(64)]
-    
+        ''' Leer datos del sensor '''
+        if self.sensor_type == 'mockup':
+            return [random.randint(0, 100) for _ in range(64)]
+        else:
+            try:
+                data = self.serial_conn.readline().decode().strip()
+                return data
+            except Exception as e:
+                print(f'Error leyendo del sensor: {e}')
 
 class DataPublisher:
     '''
@@ -89,12 +94,16 @@ class DataPublisher:
 '''
 async def main():
     parser = argparse.ArgumentParser(description="Sensor Application")
+    
+    parser.add_argument("--sensor_type", choices=["mockup", "real"], default="mockup", help="Tipo de sensor: real o mockup")
+    parser.add_argument("--serial_port", default="/dev/ttyUSB0", help="Puerto Serie del sensor")
+    parser.add_argument("--baud_rate", type=int, default=9600, help="Baud rate para comunicación del puerto Serie.")
     parser.add_argument("--frequency", type=int, default=5, help="Frecuencia de lectura del sensor en segundos.")
     parser.add_argument("--db_uri", default="../sensor_data.db", help="URL de conexion a la base de datos.")
 
     args = parser.parse_args()
 
-    sensor = Sensor()
+    sensor = Sensor(args.sensor_type, args.serial_port, args.baud_rate)
     data_publisher = DataPublisher()
     database = Database(args.db_uri)
 
