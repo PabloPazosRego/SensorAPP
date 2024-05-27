@@ -32,7 +32,8 @@ class Database:
     def store_data(self, data):
         try:
             cursor = self.db_conn.cursor()
-            cursor.execute("INSERT INTO sensor_data (value) VALUES (?)", (data,))
+            print(str(data).encode())
+            cursor.execute("INSERT INTO sensor_data (value) VALUES (?)", (str(data),))
             self.db_conn.commit()
         except sqlite3.Error as e:
             print(f'Error subiendo datos al DB {e}')
@@ -57,7 +58,7 @@ class DataPublisher:
 
     async def connect_to_nats(self):
         try:
-            await self.nats_client.connect(servers=["nats://localhost:4222"], io_loop=asyncio.get_running_loop(), connect_timeout=10)
+            await self.nats_client.connect(servers=["nats://localhost:4222"], connect_timeout=10)
 
             #await self.nats_client.connect('nats://localhost:4222')
         except Exception as e:
