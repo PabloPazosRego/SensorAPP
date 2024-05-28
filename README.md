@@ -17,8 +17,8 @@ Esta aplicación escrita en Python está diseñada para leer datos de un sensor 
 1. Clonar el repositorio:
 
     ```bash
-    git clone https://github.com/tu_usuario/sensor-data-application.git
-    cd sensor-data-application
+    git clone https://github.com/PabloPazosRego/SensorAPP.git
+    cd SensorAPP
     ```
 
 2. Crear un entorno virtual e instalar las dependencias:
