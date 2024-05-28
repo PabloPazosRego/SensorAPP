@@ -35,7 +35,6 @@ class Database:
     def store_data(self, data):
         try:
             cursor = self.db_conn.cursor()
-            print(str(data).encode())
             cursor.execute("INSERT INTO sensor_data (value) VALUES (?)", (str(data),))
             self.db_conn.commit()
             logging.info(f'DB:: Data stored correctly.')
@@ -71,16 +70,25 @@ class Sensor:
 
     
     def read_sensor_data(self):
-        ''' Leer datos del sensor '''
+        ''' 
+         Returns
+        
+            A list of 64 unsigned 16-bit integers.
+        '''
         if self.sensor_type == 'mockup':
             return [random.randint(0, 100) for _ in range(64)]
         else:
-            try:
-                data = self.serial_conn.readline().decode().strip()
-                logging.info(f'SENSOR:: Data collected from real sensor: {data}')
-                return data
-            except Exception as e:
-                logging.error(f"SENSOR:: Error reading from serial port: {e}")
+            if self.serial_conn.is_open:
+                try:
+                    # Leer datos del puerto serie
+                    data = self.serial_conn.read(128)  # Leer 128 bytes (64 valores de 16 bits)
+                    return [int.from_bytes(data[i:i+2], byteorder='little') for i in range(0, len(data), 2)]
+                except Exception as e:
+                    print(f"Error al leer datos del puerto serie: {e}")
+                    return None
+            else:
+                print("El puerto serie no está abierto")
+                return None
 
 class DataPublisher:
     '''

@@ -4,19 +4,21 @@ import asyncio, random
 from SensorAPP import Sensor, DataPublisher, Database
 
 class TestSensor(unittest.TestCase):
-    def test_read_sensor_data_mockup(self):
-        sensor = Sensor(sensor_type="mockup")
+    @patch('serial.Serial')
+    def test_read_sensor_data_mockup(self, mock_serial):
+        sensor = Sensor(sensor_type='mockup')
         data = sensor.read_sensor_data()
-        self.assertIsInstance(data, list)
         self.assertEqual(len(data), 64)
+        self.assertTrue(all(0 <= x <= 65535 for x in data))
 
-    def test_read_sensor_data_real(self):
-        mock_serial = Mock()
-        mock_serial.readline.return_value = "123,456\n"
-        sensor = Sensor(sensor_type="real", serial_port="COM1", baud_rate=9600)
-        sensor.serial_connection = mock_serial
+    @patch('serial.Serial')
+    def test_read_sensor_data_real(self, mock_serial):
+        mock_serial_instance = mock_serial.return_value
+        mock_serial_instance.read.return_value = bytes([random.randint(0, 255) for _ in range(128)])
+        sensor = Sensor(sensor_type='real')
         data = sensor.read_sensor_data()
-        self.assertEqual(data, "123,456")
+        self.assertEqual(len(data), 64)
+        self.assertTrue(all(0 <= x <= 65535 for x in data))
 
 class TestDataPublisher(unittest.TestCase):
     @patch("SensorAPP.NATS")
@@ -43,16 +45,20 @@ class TestDataPublisher(unittest.TestCase):
 
 
 class TestDatabase(unittest.TestCase):
-    def setUp(self):
-        self.db = Database(db_uri="sqlite:///:memory:")
     
+    def setUp(self):
+        self.database = Database(":memory:")  # Usar una base de datos en memoria para pruebas
+
     def test_store_data(self):
-        self.db.store_data("test_data")
-        cursor = self.db.db_connection.cursor()
-        cursor.execute("SELECT * FROM sensor_data")
-        result = cursor.fetchone()
-        self.assertIsNotNone(result)
-        self.assertEqual(result[1], "test_data")
+        data = [random.randint(0, 65535) for _ in range(64)]  # Valores de 16 bits sin signo
+        try:
+            self.database.store_data(data)
+            cursor = self.database.db_conn.cursor()
+            cursor.execute("SELECT value FROM sensor_data")
+            stored_data = cursor.fetchone()[0]
+            self.assertEqual(stored_data, str(data))
+        except Exception as e:
+            self.fail(f"store_data raised Exception unexpectedly: {e}")
 
 if __name__ == "__main__":
     unittest.main()
