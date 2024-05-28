@@ -69,3 +69,9 @@ En windows:
 
         ``` bash
         nats-server
+
+## Ejecución de los Test Unitarios
+El módulo de pruebas puede ser ejecutado desde la línea de comandos:
+
+    ```bash
+        python -m unittest discover -s tests
