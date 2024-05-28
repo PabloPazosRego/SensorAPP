@@ -38,3 +38,32 @@ La aplicación puede ser ejecutada desde la línea de comandos con varios argume
 ```bash
 python main.py --frequency <SEGUNDOS> --db_uri <URL_BASE_DATOS> --sensor_type <REAL/MOCKUP> --serial_port <PUERTO_SERIE_SENSOR>
 
+
+
+### Ejecución de los Test Unitarios
+
+El modulo test puede ser ejecutada desde la línea de comandos:
+``` bash
+    python -m unittest discover -s tests
+
+
+# Notas Adicionales
+
+NATS Server: Asegúrate de que el servidor NATS esté en funcionamiento antes de ejecutar la aplicación.
+
+## Instalar NATS
+
+```` bash
+
+En windows: 
+    1) Cambiar políticas de ejecución de Scripts
+
+    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+   2) Instalar nats-server
+
+        choco install nats-server
+    
+    3) Arrancar el servidor NATS
+
+        nats-server
