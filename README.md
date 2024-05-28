@@ -36,7 +36,7 @@ Esta aplicación escrita en Python está diseñada para leer datos de un sensor 
 La aplicación puede ser ejecutada desde la línea de comandos con varios argumentos:
 
 ```bash
-python main.py --frequency <SEGUNDOS> --db_uri <URL_BASE_DATOS> --sensor_type <REAL/MOCKUP> --serial_port <PUERTO_SERIE_SENSOR>
+python SensorAPP.py --frequency <SEGUNDOS> --db_uri <URL_BASE_DATOS> --sensor_type <REAL/MOCKUP> --serial_port <PUERTO_SERIE_SENSOR>
 
 
 
