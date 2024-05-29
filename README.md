@@ -70,6 +70,7 @@ En windows:
         ``` bash
         nats-server
 
+<<<<<<< HEAD
 
 # Estructura de datos
 
@@ -85,3 +86,12 @@ sensor-data-application/
     ├── test_database.py    # Pruebas unitarias para la base de datos
     ├── test_sensor.py      # Pruebas unitarias para el sensor
     └── test_data_publisher.py # Pruebas unitarias para el publicador de datos
+
+## Ejecución de los Test Unitarios
+El módulo de pruebas puede ser ejecutado desde la línea de comandos:
+
+    ```bash
+        python -m unittest discover -s tests
+=======
+
+>>>>>>> 0ef8a408c3573a8107826ba8fcec6047bcf02ba8
