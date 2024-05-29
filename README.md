@@ -69,3 +69,19 @@ En windows:
 
         ``` bash
         nats-server
+
+
+# Estructura de datos
+
+sensor-data-application/
+│
+├── main.py                 # Punto de entrada principal de la aplicación
+├── sensor.py               # Clase del sensor (real y mockup)
+├── database.py             # Clase para manejar la base de datos
+├── data_publisher.py       # Clase para publicar datos en NATS
+├── requirements.txt        # Dependencias del proyecto
+├── README.md               # Este archivo
+└── tests/
+    ├── test_database.py    # Pruebas unitarias para la base de datos
+    ├── test_sensor.py      # Pruebas unitarias para el sensor
+    └── test_data_publisher.py # Pruebas unitarias para el publicador de datos

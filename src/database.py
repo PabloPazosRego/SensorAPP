@@ -14,6 +14,9 @@ class Database:
         self.create_table()
 
     def create_connection(self):
+        '''
+            Creacion de la conexion con la base de datos asociada al url dada
+        '''
         try:
             self.db_conn = sqlite3.connect(self.db_url)
             logging.info(f'DB:: Successful connection.')
@@ -22,6 +25,9 @@ class Database:
             
 
     def create_table(self):
+        '''
+            Funcion para crear las tablas necesarias en caso de no existir en la BBDD
+        '''
         cursor = self.db_conn.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS sensor_data (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,

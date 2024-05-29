@@ -19,6 +19,8 @@ async def main():
     parser.add_argument("--baud_rate", type=int, default=9600, help="Baud rate para comunicación del puerto Serie.")
     parser.add_argument("--frequency", type=int, default=5, help="Frecuencia de lectura del sensor en segundos.")
     parser.add_argument("--db_uri", default="../sensor_data.db", help="URL de conexion a la base de datos.")
+    parser.add_argument("--max_mockup", default = 100, help = "Valor maximo de medida para un sensor mockup.")
+    parser.add_argument("--min_mockup", default = 0, help = "Valor minimo de medida para un sensor mockup.")
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
