@@ -39,14 +39,6 @@ La aplicación puede ser ejecutada desde la línea de comandos con varios argume
 python SensorAPP.py --frequency <SEGUNDOS> --db_uri <URL_BASE_DATOS> --sensor_type <REAL/MOCKUP> --serial_port <PUERTO_SERIE_SENSOR>
 
 
-
-####  Ejecución de los Test Unitarios
-
-El modulo test puede ser ejecutada desde la línea de comandos:
-``` bash
-    python -m unittest discover -s tests
-
-
 ## Notas Adicionales
 
 NATS Server: Asegúrate de que el servidor NATS esté en funcionamiento antes de ejecutar la aplicación.
